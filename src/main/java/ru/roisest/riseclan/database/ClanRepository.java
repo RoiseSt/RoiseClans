@@ -205,7 +205,21 @@ public class ClanRepository {
         }
     }
     
+    public boolean hasInvitation(java.util.UUID playerUUID) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT 1 FROM clan_invitations WHERE player_uuid = ? LIMIT 1")) {
+            stmt.setString(1, playerUUID.toString());
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+    
     public void createInvitation(int clanId, java.util.UUID playerUUID, String playerName) throws SQLException {
+        // Удаляем старые приглашения перед созданием нового
+        deleteInvitation(playerUUID);
+        
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(
                      "INSERT INTO clan_invitations (clan_id, player_uuid, player_name) VALUES (?, ?, ?)")) {
