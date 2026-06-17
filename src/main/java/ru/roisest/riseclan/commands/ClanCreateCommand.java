@@ -6,6 +6,7 @@ import ru.roisest.riseclan.database.ClanRepository;
 import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.model.ClanMember;
 import ru.roisest.riseclan.utils.MessageUtil;
+import java.util.Optional;
 
 public class ClanCreateCommand implements IClanCommand {
     private RiseClans plugin;
@@ -33,6 +34,18 @@ public class ClanCreateCommand implements IClanCommand {
         try {
             ClanRepository repo = new ClanRepository(plugin.getDatabaseManager());
             
+            Optional<Clan> playerClan = repo.getClanByLeader(player.getUniqueId());
+            if (playerClan.isPresent()) {
+                MessageUtil.sendError(player, "Вы уже являетесь лидером клана " + playerClan.get().getName());
+                return;
+            }
+            
+            Optional<Clan> memberClan = repo.getClanByMember(player.getUniqueId());
+            if (memberClan.isPresent()) {
+                MessageUtil.sendError(player, "Вы уже состоите в клане " + memberClan.get().getName() + ". Сначала покиньте клан.");
+                return;
+            }
+            
             if (repo.getClanByName(clanName).isPresent()) {
                 MessageUtil.sendError(player, "Клан с таким названием уже существует");
                 return;
@@ -45,13 +58,17 @@ public class ClanCreateCommand implements IClanCommand {
             clan.setPvpEnabled(plugin.getConfig().getBoolean("pvp.enabled", true));
 
             repo.createClan(clan);
-
-            ClanMember leader = new ClanMember();
-            leader.setPlayerUUID(player.getUniqueId());
-            leader.setPlayerName(player.getName());
-            leader.setRole("LEADER");
-
-            MessageUtil.sendSuccess(player, "Клан успешно создан!");
+            
+            Optional<Clan> createdClan = repo.getClanByName(clanName);
+            if (createdClan.isPresent()) {
+                ClanMember leader = new ClanMember();
+                leader.setPlayerUUID(player.getUniqueId());
+                leader.setPlayerName(player.getName());
+                leader.setRole("LEADER");
+                
+                repo.addMember(createdClan.get().getId(), leader);
+                MessageUtil.sendSuccess(player, "Клан \"" + clanName + "\" успешно создан!");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             MessageUtil.sendError(player, "Произошла ошибка при создании клана");

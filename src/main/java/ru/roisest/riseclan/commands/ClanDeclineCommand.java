@@ -2,7 +2,9 @@ package ru.roisest.riseclan.commands;
 
 import org.bukkit.entity.Player;
 import ru.roisest.riseclan.RiseClans;
+import ru.roisest.riseclan.database.ClanRepository;
 import ru.roisest.riseclan.utils.MessageUtil;
+import java.util.Optional;
 
 public class ClanDeclineCommand implements IClanCommand {
     private RiseClans plugin;
@@ -13,10 +15,20 @@ public class ClanDeclineCommand implements IClanCommand {
 
     @Override
     public void execute(Player player, String[] args) {
-        if (args.length < 1) {
-            MessageUtil.sendError(player, "Использование: /clan decline {клан}");
-            return;
+        try {
+            ClanRepository repo = new ClanRepository(plugin.getDatabaseManager());
+            
+            Optional<Integer> invitationOpt = repo.getLatestInvitation(player.getUniqueId());
+            if (!invitationOpt.isPresent()) {
+                MessageUtil.sendError(player, "У вас нет приглашений в клан");
+                return;
+            }
+            
+            repo.deleteInvitation(player.getUniqueId());
+            MessageUtil.sendSuccess(player, "Приглашение отклонено");
+        } catch (Exception e) {
+            e.printStackTrace();
+            MessageUtil.sendError(player, "Произошла ошибка");
         }
-        MessageUtil.sendError(player, "Скоро будет доступно");
     }
 }

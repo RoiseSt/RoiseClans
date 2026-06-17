@@ -15,10 +15,11 @@ public class ClanRepository {
     public void createClan(Clan clan) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO clans (name, leader, color) VALUES (?, ?, ?)")) {
+                     "INSERT INTO clans (name, leader, color, pvp_enabled) VALUES (?, ?, ?, ?)")) {
             stmt.setString(1, clan.getName());
             stmt.setString(2, clan.getLeaderUUID().toString());
             stmt.setString(3, clan.getColor());
+            stmt.setBoolean(4, clan.isPvpEnabled());
             stmt.executeUpdate();
         }
     }
@@ -26,6 +27,14 @@ public class ClanRepository {
     public void deleteClan(int clanId) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement("DELETE FROM clans WHERE id = ?")) {
+            stmt.setInt(1, clanId);
+            stmt.executeUpdate();
+        }
+    }
+    
+    public void deleteClanMembers(int clanId) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("DELETE FROM clan_members WHERE clan_id = ?")) {
             stmt.setInt(1, clanId);
             stmt.executeUpdate();
         }
@@ -48,6 +57,48 @@ public class ClanRepository {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM clans WHERE id = ?")) {
             stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapClan(rs));
+                }
+            }
+        }
+        return Optional.empty();
+    }
+    
+    public Optional<Clan> getClanByLeader(java.util.UUID leaderUUID) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM clans WHERE leader = ?")) {
+            stmt.setString(1, leaderUUID.toString());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapClan(rs));
+                }
+            }
+        }
+        return Optional.empty();
+    }
+    
+    public Optional<Clan> getClanByMember(java.util.UUID playerUUID) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT c.* FROM clans c JOIN clan_members cm ON c.id = cm.clan_id WHERE cm.player_uuid = ?")) {
+            stmt.setString(1, playerUUID.toString());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapClan(rs));
+                }
+            }
+        }
+        return Optional.empty();
+    }
+    
+    public Optional<Clan> getClanByMemberRole(java.util.UUID playerUUID, String role) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT c.* FROM clans c JOIN clan_members cm ON c.id = cm.clan_id WHERE cm.player_uuid = ? AND cm.role = ?")) {
+            stmt.setString(1, playerUUID.toString());
+            stmt.setString(2, role);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return Optional.of(mapClan(rs));
@@ -103,7 +154,7 @@ public class ClanRepository {
         }
     }
 
-    public void removeMember(int clanId, UUID playerUUID) throws SQLException {
+    public void removeMember(int clanId, java.util.UUID playerUUID) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(
                      "DELETE FROM clan_members WHERE clan_id = ? AND player_uuid = ?")) {
@@ -128,7 +179,7 @@ public class ClanRepository {
         return members;
     }
 
-    public Optional<ClanMember> getMember(int clanId, UUID playerUUID) throws SQLException {
+    public Optional<ClanMember> getMember(int clanId, java.util.UUID playerUUID) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(
                      "SELECT * FROM clan_members WHERE clan_id = ? AND player_uuid = ?")) {
@@ -143,7 +194,7 @@ public class ClanRepository {
         return Optional.empty();
     }
 
-    public void updateMemberRole(int clanId, UUID playerUUID, String role) throws SQLException {
+    public void updateMemberRole(int clanId, java.util.UUID playerUUID, String role) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(
                      "UPDATE clan_members SET role = ? WHERE clan_id = ? AND player_uuid = ?")) {
@@ -153,15 +204,49 @@ public class ClanRepository {
             stmt.executeUpdate();
         }
     }
+    
+    public void createInvitation(int clanId, java.util.UUID playerUUID, String playerName) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO clan_invitations (clan_id, player_uuid, player_name) VALUES (?, ?, ?)")) {
+            stmt.setInt(1, clanId);
+            stmt.setString(2, playerUUID.toString());
+            stmt.setString(3, playerName);
+            stmt.executeUpdate();
+        }
+    }
+    
+    public Optional<Integer> getLatestInvitation(java.util.UUID playerUUID) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT clan_id FROM clan_invitations WHERE player_uuid = ? ORDER BY id DESC LIMIT 1")) {
+            stmt.setString(1, playerUUID.toString());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(rs.getInt("clan_id"));
+                }
+            }
+        }
+        return Optional.empty();
+    }
+    
+    public void deleteInvitation(java.util.UUID playerUUID) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "DELETE FROM clan_invitations WHERE player_uuid = ?")) {
+            stmt.setString(1, playerUUID.toString());
+            stmt.executeUpdate();
+        }
+    }
 
     private Clan mapClan(ResultSet rs) throws SQLException {
         Clan clan = new Clan();
         clan.setId(rs.getInt("id"));
         clan.setName(rs.getString("name"));
-        clan.setLeaderUUID(UUID.fromString(rs.getString("leader")));
+        clan.setLeaderUUID(java.util.UUID.fromString(rs.getString("leader")));
         String viceLeader = rs.getString("vice_leader");
         if (viceLeader != null) {
-            clan.setViceLeaderUUID(UUID.fromString(viceLeader));
+            clan.setViceLeaderUUID(java.util.UUID.fromString(viceLeader));
         }
         clan.setColor(rs.getString("color"));
         clan.setKills(rs.getInt("kills"));
@@ -173,7 +258,7 @@ public class ClanRepository {
 
     private ClanMember mapClanMember(ResultSet rs) throws SQLException {
         ClanMember member = new ClanMember();
-        member.setPlayerUUID(UUID.fromString(rs.getString("player_uuid")));
+        member.setPlayerUUID(java.util.UUID.fromString(rs.getString("player_uuid")));
         member.setPlayerName(rs.getString("player_name"));
         member.setRole(rs.getString("role"));
         return member;

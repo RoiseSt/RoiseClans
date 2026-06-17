@@ -20,7 +20,7 @@ public class ClanPvpCommand implements IClanCommand {
         try {
             ClanRepository clanRepo = new ClanRepository(plugin.getDatabaseManager());
             
-            Optional<Clan> clanOpt = getClanByPlayer(player, clanRepo);
+            Optional<Clan> clanOpt = clanRepo.getClanByMember(player.getUniqueId());
             if (!clanOpt.isPresent()) {
                 MessageUtil.sendError(player, "Вы не в клане!");
                 return;
@@ -45,9 +45,5 @@ public class ClanPvpCommand implements IClanCommand {
             MessageUtil.sendError(player, "Ошибка базы данных!");
             plugin.getLogger().severe("Error toggling PVP: " + e.getMessage());
         }
-    }
-    
-    private Optional<Clan> getClanByPlayer(Player player, ClanRepository clanRepo) throws SQLException {
-        return Optional.empty();
     }
 }
