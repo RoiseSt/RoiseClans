@@ -1,0 +1,15 @@
+name: RoiseClans
+version: 1.0.0
+main: ru.roisest.riseclan.RiseClans
+description: Плагин системы кланов для Minecraft
+authors: [RoiseSt]
+api-version: '1.21'
+
+commands:
+  clan:
+    description: Основная команда для кланов
+    usage: /clan help
+    aliases: [c]
+
+soft-depend:
+  - PlaceholderAPI

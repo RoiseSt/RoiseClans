@@ -1,0 +1,42 @@
+# RoiseClans Configuration
+
+# MySQL Settings
+mysql:
+  host: localhost
+  port: 3306
+  database: riseclans
+  username: root
+  password: password
+  pool-size: 10
+  max-lifetime: 1800000
+
+# Clan Settings
+clan:
+  min-name-length: 3
+  max-name-length: 16
+  max-members: 50
+  default-color: '&7'
+
+# PvP Settings
+pvp:
+  enabled: true
+  friendly-fire: false
+
+# Messages
+messages:
+  prefix: '&8[&aRiseClans&8] &r'
+  no-permission: 'У вас нет прав на эту команду'
+  clan-not-found: 'Клан не найден'
+  player-not-found: 'Игрок не найден'
+  no-clan: 'Вы не состоите в клане'
+  clan-exists: 'Клан с таким именем уже существует'
+  clan-created: 'Клан успешно создан'
+  clan-deleted: 'Клан удален'
+  joined-clan: 'Вы присоединились к клану'
+  left-clan: 'Вы покинули клан'
+  kicked: 'Вы были выгнаны из клана'
+  invited: 'Вы приглашены в клан {clan}'
+  invite-sent: 'Приглашение отправлено игроку {player}'
+  promoted: 'Вы повышены до заместителя'
+  demoted: 'Вы понижены'
+  new-leader: 'Новый лидер клана: {player}'
