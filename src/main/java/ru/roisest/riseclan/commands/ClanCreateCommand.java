@@ -17,7 +17,7 @@ public class ClanCreateCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Usage: /clan create {name}");
+            MessageUtil.sendError(player, "Использование: /clan create {имя}");
             return;
         }
 
@@ -26,7 +26,7 @@ public class ClanCreateCommand implements IClanCommand {
         int maxLength = plugin.getConfig().getInt("clan.max-name-length", 16);
 
         if (clanName.length() < minLength || clanName.length() > maxLength) {
-            MessageUtil.sendError(player, "Clan name must be between " + minLength + " and " + maxLength + " characters");
+            MessageUtil.sendError(player, "Название клана должно быть от " + minLength + " до " + maxLength + " символов");
             return;
         }
 
@@ -34,7 +34,7 @@ public class ClanCreateCommand implements IClanCommand {
             ClanRepository repo = new ClanRepository(plugin.getDatabaseManager());
             
             if (repo.getClanByName(clanName).isPresent()) {
-                MessageUtil.sendError(player, "Clan with that name already exists");
+                MessageUtil.sendError(player, "Клан с таким названием уже существует");
                 return;
             }
 
@@ -51,10 +51,10 @@ public class ClanCreateCommand implements IClanCommand {
             leader.setPlayerName(player.getName());
             leader.setRole("LEADER");
 
-            MessageUtil.sendSuccess(player, "Clan created successfully!");
+            MessageUtil.sendSuccess(player, "Клан успешно создан!");
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "An error occurred while creating the clan");
+            MessageUtil.sendError(player, "Произошла ошибка при создании клана");
         }
     }
 }

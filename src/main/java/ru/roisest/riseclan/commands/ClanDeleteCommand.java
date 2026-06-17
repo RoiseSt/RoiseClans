@@ -13,7 +13,6 @@ public class ClanDeleteCommand implements IClanCommand {
 
     @Override
     public void execute(Player player, String[] args) {
-        // TODO: Implement delete clan
-        MessageUtil.sendError(player, "You are not in a clan");
+        MessageUtil.sendError(player, "Вы не в клане");
     }
 }

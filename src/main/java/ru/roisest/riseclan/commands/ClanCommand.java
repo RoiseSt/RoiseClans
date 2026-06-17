@@ -114,7 +114,7 @@ public class ClanCommand implements CommandExecutor {
                 setLeaderCommand.execute(player, newArgs);
                 break;
             default:
-                MessageUtil.sendError(player, "Unknown command. Use /clan help");
+                MessageUtil.sendError(player, "Неизвестная команда. Используйте /clan help");
                 break;
         }
 

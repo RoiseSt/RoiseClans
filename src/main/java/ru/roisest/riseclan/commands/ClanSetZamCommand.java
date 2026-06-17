@@ -14,9 +14,9 @@ public class ClanSetZamCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Usage: /clan setZam {player}");
+            MessageUtil.sendError(player, "Использование: /clan setZam {игрок}");
             return;
         }
-        MessageUtil.sendError(player, "Coming soon");
+        MessageUtil.sendError(player, "Скоро будет доступно");
     }
 }

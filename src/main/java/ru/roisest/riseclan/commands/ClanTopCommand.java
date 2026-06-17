@@ -17,21 +17,21 @@ public class ClanTopCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Usage: /clan top {kills/level}");
+            MessageUtil.sendError(player, "Использование: /clan top {kills/level}");
             return;
         }
 
         try {
             String sortBy = args[0].toLowerCase();
             if (!"kills".equals(sortBy) && !"level".equals(sortBy)) {
-                MessageUtil.sendError(player, "Sort by: kills or level");
+                MessageUtil.sendError(player, "Сортировать по: kills или level");
                 return;
             }
 
             ClanRepository repo = new ClanRepository(plugin.getDatabaseManager());
             List<Clan> topClans = repo.getTopClans(sortBy, 10);
 
-            MessageUtil.sendInfo(player, "&8=== &aTop 10 Clans by " + sortBy.toUpperCase() + " &8===");
+            MessageUtil.sendInfo(player, "&8=== &aТоп 10 кланов по " + sortBy.toUpperCase() + " &8===");
             int position = 1;
             for (Clan clan : topClans) {
                 MessageUtil.sendInfo(player, "&a#" + position + " &7" + clan.getName() + " &8- &7" + 
@@ -40,7 +40,7 @@ public class ClanTopCommand implements IClanCommand {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "An error occurred");
+            MessageUtil.sendError(player, "Произошла ошибка");
         }
     }
 }

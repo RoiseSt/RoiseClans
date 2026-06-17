@@ -13,6 +13,6 @@ public class ClanLeaveCommand implements IClanCommand {
 
     @Override
     public void execute(Player player, String[] args) {
-        MessageUtil.sendError(player, "Coming soon");
+        MessageUtil.sendError(player, "Скоро будет доступно");
     }
 }

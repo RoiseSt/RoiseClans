@@ -14,9 +14,9 @@ public class ClanChatCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Usage: /clan chat {message}");
+            MessageUtil.sendError(player, "Использование: /clan chat {сообщение}");
             return;
         }
-        MessageUtil.sendError(player, "Coming soon");
+        MessageUtil.sendError(player, "Скоро будет доступно");
     }
 }

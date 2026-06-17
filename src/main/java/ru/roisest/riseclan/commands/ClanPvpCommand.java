@@ -22,7 +22,7 @@ public class ClanPvpCommand implements IClanCommand {
             
             Optional<Clan> clanOpt = getClanByPlayer(player, clanRepo);
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendError(player, "You are not in a clan!");
+                MessageUtil.sendError(player, "Вы не в клане!");
                 return;
             }
             
@@ -30,7 +30,7 @@ public class ClanPvpCommand implements IClanCommand {
             
             if (!clan.getLeaderUUID().equals(player.getUniqueId()) && 
                 (clan.getViceLeaderUUID() == null || !clan.getViceLeaderUUID().equals(player.getUniqueId()))) {
-                MessageUtil.sendError(player, "Only clan leader or vice leader can toggle PVP!");
+                MessageUtil.sendError(player, "Только лидер или заместитель лидера могут переключать ПВП!");
                 return;
             }
             
@@ -38,11 +38,11 @@ public class ClanPvpCommand implements IClanCommand {
             clan.setPvpEnabled(newPvpState);
             clanRepo.updateClan(clan);
             
-            String status = newPvpState ? "enabled" : "disabled";
-            MessageUtil.sendSuccess(player, "PVP between clan members has been " + status + "!");
+            String status = newPvpState ? "включен" : "выключен";
+            MessageUtil.sendSuccess(player, "ПВП между членами клана был " + status + "!");
             
         } catch (SQLException e) {
-            MessageUtil.sendError(player, "Database error!");
+            MessageUtil.sendError(player, "Ошибка базы данных!");
             plugin.getLogger().severe("Error toggling PVP: " + e.getMessage());
         }
     }

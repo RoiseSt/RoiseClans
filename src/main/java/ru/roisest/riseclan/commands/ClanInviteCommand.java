@@ -14,9 +14,9 @@ public class ClanInviteCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Usage: /clan invite {player}");
+            MessageUtil.sendError(player, "Использование: /clan invite {игрок}");
             return;
         }
-        MessageUtil.sendError(player, "Coming soon");
+        MessageUtil.sendError(player, "Скоро будет доступно");
     }
 }

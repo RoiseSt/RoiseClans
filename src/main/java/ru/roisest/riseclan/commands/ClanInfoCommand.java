@@ -17,7 +17,7 @@ public class ClanInfoCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Usage: /clan info {clan}");
+            MessageUtil.sendError(player, "Использование: /clan info {клан}");
             return;
         }
 
@@ -26,20 +26,20 @@ public class ClanInfoCommand implements IClanCommand {
             Optional<Clan> optional = repo.getClanByName(args[0]);
 
             if (!optional.isPresent()) {
-                MessageUtil.sendError(player, "Clan not found");
+                MessageUtil.sendError(player, "Клан не найден");
                 return;
             }
 
             Clan clan = optional.get();
-            MessageUtil.sendInfo(player, "&8=== &a" + clan.getName() + " Info &8===");
-            MessageUtil.sendInfo(player, "&aLevel: &7" + clan.getLevel());
-            MessageUtil.sendInfo(player, "&aKills: &7" + clan.getKills());
-            MessageUtil.sendInfo(player, "&aDeaths: &7" + clan.getDeaths());
-            MessageUtil.sendInfo(player, "&aK/D Ratio: &7" + String.format("%.2f", clan.getKDRatio()));
-            MessageUtil.sendInfo(player, "&aPvP: &7" + (clan.isPvpEnabled() ? "Enabled" : "Disabled"));
+            MessageUtil.sendInfo(player, "&8=== &a" + clan.getName() + " Информация &8===");
+            MessageUtil.sendInfo(player, "&aУровень: &7" + clan.getLevel());
+            MessageUtil.sendInfo(player, "&aУбийств: &7" + clan.getKills());
+            MessageUtil.sendInfo(player, "&aСмертей: &7" + clan.getDeaths());
+            MessageUtil.sendInfo(player, "&aСоотношение У/С: &7" + String.format("%.2f", clan.getKDRatio()));
+            MessageUtil.sendInfo(player, "&aПвП: &7" + (clan.isPvpEnabled() ? "Включен" : "Выключен"));
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "An error occurred");
+            MessageUtil.sendError(player, "Произошла ошибка");
         }
     }
 }

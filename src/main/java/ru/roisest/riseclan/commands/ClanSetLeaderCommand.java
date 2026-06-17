@@ -14,9 +14,9 @@ public class ClanSetLeaderCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Usage: /clan setLeader {player}");
+            MessageUtil.sendError(player, "Использование: /clan setLeader {игрок}");
             return;
         }
-        MessageUtil.sendError(player, "Coming soon");
+        MessageUtil.sendError(player, "Скоро будет доступно");
     }
 }

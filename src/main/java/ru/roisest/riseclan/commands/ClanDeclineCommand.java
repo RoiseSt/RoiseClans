@@ -14,9 +14,9 @@ public class ClanDeclineCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Usage: /clan decline {clan}");
+            MessageUtil.sendError(player, "Использование: /clan decline {клан}");
             return;
         }
-        MessageUtil.sendError(player, "Coming soon");
+        MessageUtil.sendError(player, "Скоро будет доступно");
     }
 }
