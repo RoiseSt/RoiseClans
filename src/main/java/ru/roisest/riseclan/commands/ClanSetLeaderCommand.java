@@ -53,15 +53,15 @@ public class ClanSetLeaderCommand implements IClanCommand {
             
             UUID oldLeaderUUID = clan.getLeaderUUID();
             clan.setLeaderUUID(targetPlayer.getUniqueId());
-            clan.setViceLeaderUUID(oldLeaderUUID);
+            clan.setViceLeaderUUID(null);
             repo.updateClan(clan);
             
             repo.updateMemberRole(clan.getId(), targetPlayer.getUniqueId(), "LEADER");
-            repo.updateMemberRole(clan.getId(), oldLeaderUUID, "VICE_LEADER");
+            repo.updateMemberRole(clan.getId(), oldLeaderUUID, "MEMBER");
             
             MessageUtil.sendSuccess(player, "Роль лидера передана игроку " + targetPlayer.getName());
             MessageUtil.sendSuccess(targetPlayer, "Вы стали лидером клана \"" + clan.getName() + "\"");
-            MessageUtil.sendInfo(player, "Вы теперь заместитель лидера");
+            MessageUtil.sendInfo(player, "Вы теперь обычный участник клана");
         } catch (Exception e) {
             e.printStackTrace();
             MessageUtil.sendError(player, "Произошла ошибка");
