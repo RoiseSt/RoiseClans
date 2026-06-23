@@ -31,16 +31,11 @@ public class ClanInviteCommand implements IClanCommand {
             
             Optional<Clan> playerClanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!playerClanOpt.isPresent()) {
-                MessageUtil.sendError(player, "Вы не в клане или не имеете прав на приглашение");
+                MessageUtil.sendError(player, "Вы не являетесь лидером клана");
                 return;
             }
             
             Clan clan = playerClanOpt.get();
-            
-            if (!clan.getLeaderUUID().equals(player.getUniqueId())) {
-                MessageUtil.sendError(player, "Только лидер может приглашать игроков");
-                return;
-            }
             
             Player targetPlayer = Bukkit.getPlayer(args[0]);
             if (targetPlayer == null) {
