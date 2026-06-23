@@ -25,17 +25,13 @@ public class ClanHelpCommand implements IClanCommand {
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan delete &8- &fУдалить клан"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan info {клан} &8- &fИнформация о клане"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan invite {игрок} &8- &fПригласить игрока в клан"));
-        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan accept {клан} &8- &fПринять запрос в клан"));
-        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan decline {клан} &8- &fОтклонить запрос в клан"));
+        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan accept &8- &fПринять приглашение в клан"));
+        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan decline &8- &fОтклонить приглашение в клан"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan kick {игрок} &8- &fКикнуть игрока"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan leave &8- &fПокинуть клан"));
-        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan member {игрок} &8- &fПосмотреть информацию о игроке"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan pvp &8- &fИзменить режим PvP в клане"));
-        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan top {kills/level} &8- &fТоп кланов"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan chat {сообщение} &8- &fНаписать в клановый чат"));
-        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan setZam {игрок} &8- &fУстановить заместителя клана"));
-        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan removeZam &8- &fУбрать заместителя клана"));
-        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan setLeader {игрок} &8- &fУстановить создателя клана"));
+        player.sendMessage(MessageUtil.translate("&#A9BBF8/clan setLeader {игрок} &8- &fПередать роль лидера"));
 
         player.sendMessage("");
 
