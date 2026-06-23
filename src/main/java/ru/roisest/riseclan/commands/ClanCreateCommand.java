@@ -26,6 +26,12 @@ public class ClanCreateCommand implements IClanCommand {
         int minLength = plugin.getConfig().getInt("clan.min-name-length", 3);
         int maxLength = plugin.getConfig().getInt("clan.max-name-length", 16);
 
+        // Проверка на наличие только цифр
+        if (!clanName.matches("\\d+")) {
+            MessageUtil.sendError(player, "Название клана может содержать только цифры");
+            return;
+        }
+
         if (clanName.length() < minLength || clanName.length() > maxLength) {
             MessageUtil.sendError(player, "Название клана должно быть от " + minLength + " до " + maxLength + " символов");
             return;
