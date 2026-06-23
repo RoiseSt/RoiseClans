@@ -19,12 +19,8 @@ public class ClanCommand implements CommandExecutor {
     private ClanDeclineCommand declineCommand;
     private ClanKickCommand kickCommand;
     private ClanLeaveCommand leaveCommand;
-    private ClanMemberCommand memberCommand;
     private ClanPvpCommand pvpCommand;
-    private ClanTopCommand topCommand;
     private ClanChatCommand chatCommand;
-    private ClanSetZamCommand setZamCommand;
-    private ClanRemoveZamCommand removeZamCommand;
     private ClanSetLeaderCommand setLeaderCommand;
 
     public ClanCommand(RiseClans plugin) {
@@ -38,12 +34,8 @@ public class ClanCommand implements CommandExecutor {
         this.declineCommand = new ClanDeclineCommand(plugin);
         this.kickCommand = new ClanKickCommand(plugin);
         this.leaveCommand = new ClanLeaveCommand(plugin);
-        this.memberCommand = new ClanMemberCommand(plugin);
         this.pvpCommand = new ClanPvpCommand(plugin);
-        this.topCommand = new ClanTopCommand(plugin);
         this.chatCommand = new ClanChatCommand(plugin);
-        this.setZamCommand = new ClanSetZamCommand(plugin);
-        this.removeZamCommand = new ClanRemoveZamCommand(plugin);
         this.setLeaderCommand = new ClanSetLeaderCommand(plugin);
     }
 
@@ -92,23 +84,11 @@ public class ClanCommand implements CommandExecutor {
             case "leave":
                 leaveCommand.execute(player, newArgs);
                 break;
-            case "member":
-                memberCommand.execute(player, newArgs);
-                break;
             case "pvp":
                 pvpCommand.execute(player, newArgs);
                 break;
-            case "top":
-                topCommand.execute(player, newArgs);
-                break;
             case "chat":
                 chatCommand.execute(player, newArgs);
-                break;
-            case "setzam":
-                setZamCommand.execute(player, newArgs);
-                break;
-            case "removezam":
-                removeZamCommand.execute(player, newArgs);
                 break;
             case "setleader":
                 setLeaderCommand.execute(player, newArgs);
