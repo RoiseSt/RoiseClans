@@ -9,7 +9,10 @@ import org.bukkit.entity.Player;
 import ru.roisest.riseclan.RiseClans;
 import ru.roisest.riseclan.database.ClanRepository;
 import ru.roisest.riseclan.model.Clan;
+import ru.roisest.riseclan.model.ClanMember;
 import ru.roisest.riseclan.utils.MessageUtil;
+
+import java.util.List;
 import java.util.Optional;
 
 public class ClanInviteCommand implements IClanCommand {
@@ -36,6 +39,13 @@ public class ClanInviteCommand implements IClanCommand {
             }
             
             Clan clan = playerClanOpt.get();
+
+            int maxMembers = plugin.getConfig().getInt("clan.max-members", 10);
+            List<ClanMember> currentMembers = repo.getClanMembers(clan.getId());
+            if (currentMembers.size() >= maxMembers) {
+                MessageUtil.sendError(player, "В клане достигнут лимит участников (" + maxMembers + ")");
+                return;
+            }
             
             Player targetPlayer = Bukkit.getPlayer(args[0]);
             if (targetPlayer == null) {
@@ -51,6 +61,11 @@ public class ClanInviteCommand implements IClanCommand {
             Optional<Clan> targetClan = repo.getClanByMember(targetPlayer.getUniqueId());
             if (targetClan.isPresent()) {
                 MessageUtil.sendError(player, "Этот игрок уже состоит в клане");
+                return;
+            }
+
+            if (repo.hasInvitation(targetPlayer.getUniqueId())) {
+                MessageUtil.sendError(player, "У этого игрока уже есть приглашение");
                 return;
             }
             
@@ -70,7 +85,7 @@ public class ClanInviteCommand implements IClanCommand {
     private void sendInvitationMessage(Player player, String clanName) {
         player.sendMessage("");
         
-        // Верхняя линия
+        // Верхняя линия с градиентом
         player.spigot().sendMessage(new TextComponent(MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
         
         // Основное сообщение
@@ -103,7 +118,7 @@ public class ClanInviteCommand implements IClanCommand {
         
         player.sendMessage("");
         
-        // Нижняя линия
+        // Нижняя линия с градиентом
         player.spigot().sendMessage(new TextComponent(MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
         
         player.sendMessage("");
