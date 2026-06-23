@@ -1,5 +1,9 @@
 package ru.roisest.riseclan.commands;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import ru.roisest.riseclan.RiseClans;
@@ -27,18 +31,14 @@ public class ClanInviteCommand implements IClanCommand {
             
             Optional<Clan> playerClanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!playerClanOpt.isPresent()) {
-                playerClanOpt = repo.getClanByMemberRole(player.getUniqueId(), "VICE_LEADER");
-            }
-            if (!playerClanOpt.isPresent()) {
                 MessageUtil.sendError(player, "Вы не в клане или не имеете прав на приглашение");
                 return;
             }
             
             Clan clan = playerClanOpt.get();
             
-            if (!clan.getLeaderUUID().equals(player.getUniqueId()) && 
-                (clan.getViceLeaderUUID() == null || !clan.getViceLeaderUUID().equals(player.getUniqueId()))) {
-                MessageUtil.sendError(player, "Только лидер или заместитель могут приглашать игроков");
+            if (!clan.getLeaderUUID().equals(player.getUniqueId())) {
+                MessageUtil.sendError(player, "Только лидер может приглашать игроков");
                 return;
             }
             
@@ -62,10 +62,55 @@ public class ClanInviteCommand implements IClanCommand {
             repo.createInvitation(clan.getId(), targetPlayer.getUniqueId(), targetPlayer.getName());
             
             MessageUtil.sendSuccess(player, "Приглашение отправлено игроку " + targetPlayer.getName());
-            MessageUtil.sendInfo(targetPlayer, "Вам отправлено приглашение в клан \"" + clan.getName() + "\". Используйте /clan accept");
+            
+            // Отправляем красивое сообщение с кликабельной кнопкой
+            sendInvitationMessage(targetPlayer, clan.getName());
+            
         } catch (Exception e) {
             e.printStackTrace();
             MessageUtil.sendError(player, "Произошла ошибка");
         }
+    }
+    
+    private void sendInvitationMessage(Player player, String clanName) {
+        player.sendMessage("");
+        
+        // Верхняя линия
+        player.spigot().sendMessage(new TextComponent(MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
+        
+        // Основное сообщение
+        TextComponent message = new TextComponent(MessageUtil.translate("&#A9BBF8▸ &fВы получили приглашение в клан &b" + clanName));
+        player.spigot().sendMessage(message);
+        
+        player.sendMessage("");
+        
+        // Кнопка принятия приглашения
+        TextComponent acceptButton = new TextComponent(MessageUtil.translate("&#A9BBF8[✓ ПРИНЯТЬ]"));
+        acceptButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/clan accept"));
+        acceptButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
+            new ComponentBuilder(MessageUtil.translate("&#A9BBF8Нажмите, чтобы присоединиться к клану")).create()));
+        
+        // Разделитель
+        TextComponent separator = new TextComponent("  ");
+        
+        // Кнопка отклонения приглашения
+        TextComponent declineButton = new TextComponent(MessageUtil.translate("&#A9BBF8[✗ ОТКЛОНИТЬ]"));
+        declineButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/clan decline"));
+        declineButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
+            new ComponentBuilder(MessageUtil.translate("&#A9BBF8Нажмите, чтобы отклонить приглашение")).create()));
+        
+        // Отправляем кнопки
+        TextComponent line = new TextComponent();
+        line.addExtra(acceptButton);
+        line.addExtra(separator);
+        line.addExtra(declineButton);
+        player.spigot().sendMessage(line);
+        
+        player.sendMessage("");
+        
+        // Нижняя линия
+        player.spigot().sendMessage(new TextComponent(MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
+        
+        player.sendMessage("");
     }
 }
