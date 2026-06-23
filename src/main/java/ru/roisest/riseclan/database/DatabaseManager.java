@@ -74,7 +74,17 @@ public class DatabaseManager {
                     + "FOREIGN KEY (clan_id) REFERENCES clans(id) ON DELETE CASCADE"
                     + ")");
 
-            // Invites table
+            // Invitations table expected by repository (clan_invitations)
+            stmt.execute("CREATE TABLE IF NOT EXISTS clan_invitations ("
+                    + "id INT AUTO_INCREMENT PRIMARY KEY,"
+                    + "clan_id INT NOT NULL,"
+                    + "player_uuid VARCHAR(36) NOT NULL,"
+                    + "player_name VARCHAR(64),"
+                    + "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+                    + "FOREIGN KEY (clan_id) REFERENCES clans(id) ON DELETE CASCADE"
+                    + ")");
+
+            // Backwards-compatible invites table (clan_invites)
             stmt.execute("CREATE TABLE IF NOT EXISTS clan_invites ("
                     + "id INT AUTO_INCREMENT PRIMARY KEY,"
                     + "clan_id INT NOT NULL,"
