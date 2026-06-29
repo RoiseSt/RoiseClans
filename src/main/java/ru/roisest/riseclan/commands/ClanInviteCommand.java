@@ -26,7 +26,7 @@ public class ClanInviteCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendFromConfig(player, "error-db", null);
+            MessageUtil.sendFromConfig(player, "usage-invite", null);
             return;
         }
         
@@ -41,10 +41,10 @@ public class ClanInviteCommand implements IClanCommand {
             
             Clan clan = playerClanOpt.get();
 
-            int maxMembers = plugin.getConfig().getInt("clan.max-members", 10);
+            int maxMembers = plugin.getConfig().getInt("clan.max-members", 50);
             List<ClanMember> currentMembers = repo.getClanMembers(clan.getId());
             if (currentMembers.size() >= maxMembers) {
-                MessageUtil.sendFromConfig(player, "error-db", null);
+                MessageUtil.sendFromConfig(player, "clan-full", Map.of("max", String.valueOf(maxMembers)));
                 return;
             }
             
@@ -55,18 +55,18 @@ public class ClanInviteCommand implements IClanCommand {
             }
             
             if (targetPlayer.getUniqueId().equals(player.getUniqueId())) {
-                MessageUtil.sendFromConfig(player, "no-permission", null);
+                MessageUtil.sendFromConfig(player, "cannot-invite-self", null);
                 return;
             }
             
             Optional<Clan> targetClan = repo.getClanByMember(targetPlayer.getUniqueId());
             if (targetClan.isPresent()) {
-                MessageUtil.sendFromConfig(player, "error-db", null);
+                MessageUtil.sendFromConfig(player, "already-in-clan", null);
                 return;
             }
 
             if (repo.hasInvitation(targetPlayer.getUniqueId())) {
-                MessageUtil.sendFromConfig(player, "error-db", null);
+                MessageUtil.sendFromConfig(player, "error-generic", null);
                 return;
             }
             
@@ -90,7 +90,7 @@ public class ClanInviteCommand implements IClanCommand {
         player.spigot().sendMessage(new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + "&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
         
         // Основное сообщение
-        TextComponent message = new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("invited") == null ? "&#A9BBF8▸ &fВы получили приглашение в клан &b" + clanName : MessageUtil.getConfigString("invited").replace("{clan}", clanName)));
+        TextComponent message = new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + MessageUtil.getConfigString("invited").replace("{clan}", clanName)));
         player.spigot().sendMessage(message);
         
         player.sendMessage("");

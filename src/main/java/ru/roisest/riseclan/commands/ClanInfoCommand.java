@@ -35,7 +35,7 @@ public class ClanInfoCommand implements IClanCommand {
             } else {
                 Optional<Clan> clanOpt = repo.getClanByName(args[0]);
                 if (!clanOpt.isPresent()) {
-                    MessageUtil.sendFromConfig(player, "error-db", null);
+                    MessageUtil.sendFromConfig(player, "player-not-found-general", null);
                     return;
                 }
                 clan = clanOpt.get();
