@@ -20,15 +20,15 @@ public class ClanDeclineCommand implements IClanCommand {
             
             Optional<Integer> invitationOpt = repo.getLatestInvitation(player.getUniqueId());
             if (!invitationOpt.isPresent()) {
-                MessageUtil.sendError(player, "У вас нет приглашений в клан");
+                MessageUtil.sendFromConfig(player, "no-invitation", null);
                 return;
             }
             
             repo.deleteInvitation(player.getUniqueId());
-            MessageUtil.sendSuccess(player, "Приглашение отклонено");
+            MessageUtil.sendFromConfig(player, "error-generic", null);
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }
