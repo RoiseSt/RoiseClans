@@ -22,6 +22,7 @@ public class ClanCommand implements CommandExecutor {
     private ClanPvpCommand pvpCommand;
     private ClanChatCommand chatCommand;
     private ClanSetLeaderCommand setLeaderCommand;
+    private ClanReloadCommand reloadCommand;
 
     public ClanCommand(RiseClans plugin) {
         this.plugin = plugin;
@@ -37,6 +38,7 @@ public class ClanCommand implements CommandExecutor {
         this.pvpCommand = new ClanPvpCommand(plugin);
         this.chatCommand = new ClanChatCommand(plugin);
         this.setLeaderCommand = new ClanSetLeaderCommand(plugin);
+        this.reloadCommand = new ClanReloadCommand(plugin);
     }
 
     @Override
@@ -92,6 +94,9 @@ public class ClanCommand implements CommandExecutor {
                 break;
             case "setleader":
                 setLeaderCommand.execute(player, newArgs);
+                break;
+            case "reload":
+                reloadCommand.execute(player, newArgs);
                 break;
             default:
                 MessageUtil.sendError(player, "Неизвестная команда. Используйте /clan help");
