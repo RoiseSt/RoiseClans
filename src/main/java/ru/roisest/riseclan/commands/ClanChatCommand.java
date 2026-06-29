@@ -53,7 +53,7 @@ public class ClanChatCommand implements IClanCommand {
                 for (ClanMember member : members) {
                     Player onlinePlayer = org.bukkit.Bukkit.getPlayer(member.getPlayerUUID());
                     if (onlinePlayer != null && onlinePlayer.isOnline()) {
-                        MessageUtil.sendChat(onlinePlayer, finalMessage);
+                        onlinePlayer.sendMessage(MessageUtil.translate(finalMessage));
                     }
                 }
             }

@@ -59,15 +59,18 @@ messages:
   usage-invite: '&#A9BBF8Использование: /clan invite {player}'
   invite-sent: '&#A9BBF8Приглашение отправлено игроку {player}'
   invited: '&#A9BBF8Вы получили приглашение в клан {clan}'
+  invite-header: '<gradient:#7EE0FF:#A9BBF8>=== Приглашение в клан ===</gradient>'
   invite-accept-button: '&#00FF00[✓ ПРИНЯТЬ]'
   invite-decline-button: '&#FF5555[✗ ОТКЛОНИТЬ]'
   invite-accept-hover: '&#00FF00Нажмите, чтобы присоединиться к клану'
   invite-decline-hover: '&#FF5555Нажмите, чтобы отклонить приглашение'
+  invite-separator: '&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯'
   no-invitation: '&#FF5555У вас нет приглашений в клан'
 
   # Accept / Joined / Left
   joined-clan: '&#00FF00Вы присоединились к клану {clan}'
   left-clan: '&#A9BBF8Вы покинули клан {clan}'
+  leader-cannot-leave: '&#FF5555Лидер должен сначала удалить клан. Используйте /clan delete'
 
   # Kick
   usage-kick: '&#A9BBF8Использование: /clan kick {player}'
@@ -95,9 +98,10 @@ messages:
 
   # Chat
   usage-chat: '&#A9BBF8Использование: /clan chat {сообщение}'
-  chat-format: '&8[{clan}&8] &a{player}: &f{message}'
+  chat-format: '&#A9BBF8[{clan}&#A9BBF8] &#00FF00{player}&#A9BBF8: &#FFFFFF{message}'
 
   # SetLeader / SetZam
+  usage-setleader: '&#A9BBF8Использование: /clan setleader {player}'
   setleader-success: '&#A9BBF8Роль лидера передана игроку {player}'
   setleader-target: '&#A9BBF8Вы стали лидером клана {clan}'
   setzam-success: '&#A9BBF8Игрок {player} теперь заместитель лидера'

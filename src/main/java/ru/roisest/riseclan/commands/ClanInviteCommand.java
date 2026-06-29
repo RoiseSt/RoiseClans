@@ -87,10 +87,12 @@ public class ClanInviteCommand implements IClanCommand {
         player.sendMessage("");
         
         // Верхняя линия с градиентом
-        player.spigot().sendMessage(new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + "&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
+        String separator = MessageUtil.getConfigString("invite-separator") != null ? MessageUtil.getConfigString("invite-separator") : "&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯";
+        player.spigot().sendMessage(new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + separator)));
         
         // Основное сообщение
-        TextComponent message = new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + MessageUtil.getConfigString("invited").replace("{clan}", clanName)));
+        String invitedMsg = MessageUtil.getConfigString("invited") != null ? MessageUtil.getConfigString("invited") : "&#A9BBF8Вы получили приглашение в клан {clan}";
+        TextComponent message = new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + invitedMsg.replace("{clan}", clanName)));
         player.spigot().sendMessage(message);
         
         player.sendMessage("");
@@ -104,7 +106,7 @@ public class ClanInviteCommand implements IClanCommand {
             new ComponentBuilder(MessageUtil.translate(acceptHover)).create()));
         
         // Разделитель
-        TextComponent separator = new TextComponent("  ");
+        TextComponent spacer = new TextComponent("  ");
         
         // Кнопка отклонения приглашения
         String declineText = MessageUtil.getConfigString("invite-decline-button") != null ? MessageUtil.getConfigString("invite-decline-button") : "[✗ ОТКЛОНИТЬ]";
@@ -117,14 +119,14 @@ public class ClanInviteCommand implements IClanCommand {
         // Отправляем кнопки
         TextComponent line = new TextComponent();
         line.addExtra(acceptButton);
-        line.addExtra(separator);
+        line.addExtra(spacer);
         line.addExtra(declineButton);
         player.spigot().sendMessage(line);
         
         player.sendMessage("");
         
         // Нижняя линия с градиентом
-        player.spigot().sendMessage(new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + "&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
+        player.spigot().sendMessage(new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + separator)));
         
         player.sendMessage("");
     }

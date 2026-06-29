@@ -20,7 +20,7 @@ public class ClanSetLeaderCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendFromConfig(player, "no-permission", null);
+            MessageUtil.sendFromConfig(player, "usage-setleader", null);
             return;
         }
         
@@ -48,7 +48,7 @@ public class ClanSetLeaderCommand implements IClanCommand {
             
             Optional<Clan> targetClan = repo.getClanByMember(targetPlayer.getUniqueId());
             if (!targetClan.isPresent() || targetClan.get().getId() != clan.getId()) {
-                MessageUtil.sendFromConfig(player, "no-permission", null);
+                MessageUtil.sendFromConfig(player, "player-not-found", Map.of("player", args[0]));
                 return;
             }
             

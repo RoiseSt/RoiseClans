@@ -29,7 +29,7 @@ public class ClanLeaveCommand implements IClanCommand {
             Clan clan = clanOpt.get();
             
             if (clan.getLeaderUUID().equals(player.getUniqueId())) {
-                MessageUtil.sendFromConfig(player, "no-permission", null);
+                MessageUtil.sendFromConfig(player, "leader-cannot-leave", null);
                 return;
             }
             
