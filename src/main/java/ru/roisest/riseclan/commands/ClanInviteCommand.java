@@ -35,7 +35,7 @@ public class ClanInviteCommand implements IClanCommand {
             
             Optional<Clan> playerClanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!playerClanOpt.isPresent()) {
-                MessageUtil.sendFromConfig(player, "no-permission", null);
+                MessageUtil.sendFromConfig(player, "not-in-clan", null);
                 return;
             }
             

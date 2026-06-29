@@ -40,13 +40,13 @@ public class ClanCreateCommand implements IClanCommand {
             
             Optional<Clan> playerClan = repo.getClanByLeader(player.getUniqueId());
             if (playerClan.isPresent()) {
-                MessageUtil.sendFromConfig(player, "clan-exists", null);
+                MessageUtil.sendFromConfig(player, "already-in-clan", null);
                 return;
             }
             
             Optional<Clan> memberClan = repo.getClanByMember(player.getUniqueId());
             if (memberClan.isPresent()) {
-                MessageUtil.sendFromConfig(player, "no-permission", null);
+                MessageUtil.sendFromConfig(player, "already-in-clan", null);
                 return;
             }
             

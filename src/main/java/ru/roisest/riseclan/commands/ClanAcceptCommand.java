@@ -6,6 +6,7 @@ import ru.roisest.riseclan.database.ClanRepository;
 import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.model.ClanMember;
 import ru.roisest.riseclan.utils.MessageUtil;
+import java.util.List;
 import java.util.Optional;
 import java.util.Map;
 
