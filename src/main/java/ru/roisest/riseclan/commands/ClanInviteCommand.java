@@ -13,6 +13,7 @@ import ru.roisest.riseclan.model.ClanMember;
 import ru.roisest.riseclan.utils.MessageUtil;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ClanInviteCommand implements IClanCommand {
@@ -25,7 +26,7 @@ public class ClanInviteCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Использование: /clan invite {игрок}");
+            MessageUtil.sendFromConfig(player, "error-db", null);
             return;
         }
         
@@ -34,7 +35,7 @@ public class ClanInviteCommand implements IClanCommand {
             
             Optional<Clan> playerClanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!playerClanOpt.isPresent()) {
-                MessageUtil.sendError(player, "Вы не являетесь лидером клана");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
@@ -43,42 +44,42 @@ public class ClanInviteCommand implements IClanCommand {
             int maxMembers = plugin.getConfig().getInt("clan.max-members", 10);
             List<ClanMember> currentMembers = repo.getClanMembers(clan.getId());
             if (currentMembers.size() >= maxMembers) {
-                MessageUtil.sendError(player, "В клане достигнут лимит участников (" + maxMembers + ")");
+                MessageUtil.sendFromConfig(player, "error-db", null);
                 return;
             }
             
             Player targetPlayer = Bukkit.getPlayer(args[0]);
             if (targetPlayer == null) {
-                MessageUtil.sendError(player, "Игрок не найден");
+                MessageUtil.sendFromConfig(player, "player-not-found", Map.of("player", args[0]));
                 return;
             }
             
             if (targetPlayer.getUniqueId().equals(player.getUniqueId())) {
-                MessageUtil.sendError(player, "Вы не можете пригласить себя");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
             Optional<Clan> targetClan = repo.getClanByMember(targetPlayer.getUniqueId());
             if (targetClan.isPresent()) {
-                MessageUtil.sendError(player, "Этот игрок уже состоит в клане");
+                MessageUtil.sendFromConfig(player, "error-db", null);
                 return;
             }
 
             if (repo.hasInvitation(targetPlayer.getUniqueId())) {
-                MessageUtil.sendError(player, "У этого игрока уже есть приглашение");
+                MessageUtil.sendFromConfig(player, "error-db", null);
                 return;
             }
             
             repo.createInvitation(clan.getId(), targetPlayer.getUniqueId(), targetPlayer.getName());
             
-            MessageUtil.sendSuccess(player, "Приглашение отправлено игроку " + targetPlayer.getName());
+            MessageUtil.sendFromConfig(player, "invite-sent", Map.of("player", targetPlayer.getName()));
             
             // Отправляем красивое сообщение с кликабельной кнопкой
             sendInvitationMessage(targetPlayer, clan.getName());
             
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
     
@@ -86,28 +87,32 @@ public class ClanInviteCommand implements IClanCommand {
         player.sendMessage("");
         
         // Верхняя линия с градиентом
-        player.spigot().sendMessage(new TextComponent(MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
+        player.spigot().sendMessage(new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + "&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
         
         // Основное сообщение
-        TextComponent message = new TextComponent(MessageUtil.translate("&#A9BBF8▸ &fВы получили приглашение в клан &b" + clanName));
+        TextComponent message = new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("invited") == null ? "&#A9BBF8▸ &fВы получили приглашение в клан &b" + clanName : MessageUtil.getConfigString("invited").replace("{clan}", clanName)));
         player.spigot().sendMessage(message);
         
         player.sendMessage("");
         
         // Кнопка принятия приглашения
-        TextComponent acceptButton = new TextComponent(MessageUtil.translate("&#A9BBF8[✓ ПРИНЯТЬ]"));
+        String acceptText = MessageUtil.getConfigString("invite-accept-button") != null ? MessageUtil.getConfigString("invite-accept-button") : "[✓ ПРИНЯТЬ]";
+        String acceptHover = MessageUtil.getConfigString("invite-accept-hover") != null ? MessageUtil.getConfigString("invite-accept-hover") : "Нажмите, чтобы присоединиться к клану";
+        TextComponent acceptButton = new TextComponent(MessageUtil.translate(acceptText));
         acceptButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/clan accept"));
         acceptButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-            new ComponentBuilder(MessageUtil.translate("&#A9BBF8Нажмите, чтобы присоединиться к клану")).create()));
+            new ComponentBuilder(MessageUtil.translate(acceptHover)).create()));
         
         // Разделитель
         TextComponent separator = new TextComponent("  ");
         
         // Кнопка отклонения приглашения
-        TextComponent declineButton = new TextComponent(MessageUtil.translate("&#A9BBF8[✗ ОТКЛОНИТЬ]"));
+        String declineText = MessageUtil.getConfigString("invite-decline-button") != null ? MessageUtil.getConfigString("invite-decline-button") : "[✗ ОТКЛОНИТЬ]";
+        String declineHover = MessageUtil.getConfigString("invite-decline-hover") != null ? MessageUtil.getConfigString("invite-decline-hover") : "Нажмите, чтобы отклонить приглашение";
+        TextComponent declineButton = new TextComponent(MessageUtil.translate(declineText));
         declineButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/clan decline"));
         declineButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, 
-            new ComponentBuilder(MessageUtil.translate("&#A9BBF8Нажмите, чтобы отклонить приглашение")).create()));
+            new ComponentBuilder(MessageUtil.translate(declineHover)).create()));
         
         // Отправляем кнопки
         TextComponent line = new TextComponent();
@@ -119,7 +124,7 @@ public class ClanInviteCommand implements IClanCommand {
         player.sendMessage("");
         
         // Нижняя линия с градиентом
-        player.spigot().sendMessage(new TextComponent(MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
+        player.spigot().sendMessage(new TextComponent(MessageUtil.translate(MessageUtil.getConfigString("prefix") + "&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯")));
         
         player.sendMessage("");
     }
