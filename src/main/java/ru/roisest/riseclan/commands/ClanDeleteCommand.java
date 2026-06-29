@@ -6,6 +6,7 @@ import ru.roisest.riseclan.database.ClanRepository;
 import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.utils.MessageUtil;
 import java.util.Optional;
+import java.util.Map;
 
 public class ClanDeleteCommand implements IClanCommand {
     private RiseClans plugin;
@@ -21,7 +22,7 @@ public class ClanDeleteCommand implements IClanCommand {
             
             Optional<Clan> clanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendError(player, "Вы не являетесь лидером клана");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
@@ -30,10 +31,10 @@ public class ClanDeleteCommand implements IClanCommand {
             repo.deleteClanMembers(clan.getId());
             repo.deleteClan(clan.getId());
             
-            MessageUtil.sendSuccess(player, "Клан \"" + clan.getName() + "\" успешно удален");
+            MessageUtil.sendFromConfig(player, "clan-deleted", Map.of("clan", clan.getName()));
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка при удалении клана");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }
