@@ -2,12 +2,11 @@ package ru.roisest.riseclan.commands;
 
 import org.bukkit.entity.Player;
 import ru.roisest.riseclan.RiseClans;
-import ru.roisest.riseclan.database.ClanRepository;
 import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.model.ClanMember;
 import ru.roisest.riseclan.utils.MessageUtil;
+import ru.roisest.riseclan.database.ClanRepository;
 import java.util.Optional;
-import java.util.Map;
 
 public class ClanCreateCommand implements IClanCommand {
     private RiseClans plugin;
@@ -19,7 +18,8 @@ public class ClanCreateCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendFromConfig(player, "usage-create", null);
+            // usage not present in provided messages block -> fallback to error-db
+            MessageUtil.sendFromConfig(player, "error-db", null);
             return;
         }
 
@@ -29,13 +29,14 @@ public class ClanCreateCommand implements IClanCommand {
 
         // Проверка на наличие только цифр
         if (!clanName.matches("\\d+")) {
-            MessageUtil.sendFromConfig(player, "error-generic", null);
+            // no specific key provided -> fallback
+            MessageUtil.sendFromConfig(player, "error-db", null);
             return;
         }
 
         if (clanName.length() < minLength || clanName.length() > maxLength) {
-            Map<String, String> ph = Map.of("min", String.valueOf(minLength), "max", String.valueOf(maxLength));
-            MessageUtil.sendFromConfig(player, "cannot-create-name", ph);
+            // no specific key provided -> fallback
+            MessageUtil.sendFromConfig(player, "error-db", null);
             return;
         }
 
@@ -44,15 +45,13 @@ public class ClanCreateCommand implements IClanCommand {
             
             Optional<Clan> playerClan = repo.getClanByLeader(player.getUniqueId());
             if (playerClan.isPresent()) {
-                Map<String, String> ph = Map.of("clan", playerClan.get().getName());
-                MessageUtil.sendFromConfig(player, "error-generic", ph);
+                MessageUtil.sendFromConfig(player, "error-db", null);
                 return;
             }
             
             Optional<Clan> memberClan = repo.getClanByMember(player.getUniqueId());
             if (memberClan.isPresent()) {
-                Map<String, String> ph = Map.of("clan", memberClan.get().getName());
-                MessageUtil.sendFromConfig(player, "error-generic", ph);
+                MessageUtil.sendFromConfig(player, "error-db", null);
                 return;
             }
             
@@ -77,12 +76,11 @@ public class ClanCreateCommand implements IClanCommand {
                 leader.setRole("LEADER");
                 
                 repo.addMember(createdClan.get().getId(), leader);
-                Map<String, String> ph = Map.of("clan", clanName);
-                MessageUtil.sendFromConfig(player, "clan-created", ph);
+                MessageUtil.sendFromConfig(player, "clan-created", java.util.Map.of("clan", clanName));
             }
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendFromConfig(player, "error-generic", null);
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }
