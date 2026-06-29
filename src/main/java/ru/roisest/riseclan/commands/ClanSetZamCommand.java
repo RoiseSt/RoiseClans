@@ -7,6 +7,7 @@ import ru.roisest.riseclan.database.ClanRepository;
 import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.utils.MessageUtil;
 import java.util.Optional;
+import java.util.Map;
 
 public class ClanSetZamCommand implements IClanCommand {
     private RiseClans plugin;
@@ -18,7 +19,7 @@ public class ClanSetZamCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Использование: /clan setZam {игрок}");
+            MessageUtil.sendFromConfig(player, "no-permission", null);
             return;
         }
         
@@ -27,7 +28,7 @@ public class ClanSetZamCommand implements IClanCommand {
             
             Optional<Clan> clanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendError(player, "Вы не являетесь лидером клана");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
@@ -35,18 +36,18 @@ public class ClanSetZamCommand implements IClanCommand {
             
             Player targetPlayer = Bukkit.getPlayer(args[0]);
             if (targetPlayer == null) {
-                MessageUtil.sendError(player, "Игрок не найден");
+                MessageUtil.sendFromConfig(player, "player-not-found", Map.of("player", args[0]));
                 return;
             }
             
             if (targetPlayer.getUniqueId().equals(player.getUniqueId())) {
-                MessageUtil.sendError(player, "Вы не можете сделать себя заместителем");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
             Optional<Clan> targetClan = repo.getClanByMember(targetPlayer.getUniqueId());
             if (!targetClan.isPresent() || targetClan.get().getId() != clan.getId()) {
-                MessageUtil.sendError(player, "Этот игрок не состоит в вашем клане");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
@@ -58,12 +59,11 @@ public class ClanSetZamCommand implements IClanCommand {
             repo.updateClan(clan);
             repo.updateMemberRole(clan.getId(), targetPlayer.getUniqueId(), "VICE_LEADER");
             
-            MessageUtil.sendSuccess(player, "Игрок " + targetPlayer.getName() + " теперь заместитель лидера");
-            MessageUtil.sendSuccess(targetPlayer, "Вы стали заместителем лидера клана \"" + clan.getName() + "\"");
-            MessageUtil.sendInfo(targetPlayer, "Теперь вы можете: приглашать игроков, кикать участников и переключать режим ПвП");
+            MessageUtil.sendFromConfig(player, "setzam-success", Map.of("player", targetPlayer.getName()));
+            MessageUtil.sendFromConfig(targetPlayer, "setzam-target", Map.of("clan", clan.getName()));
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }

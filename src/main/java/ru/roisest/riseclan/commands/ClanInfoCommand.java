@@ -9,6 +9,7 @@ import ru.roisest.riseclan.utils.MessageUtil;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 public class ClanInfoCommand implements IClanCommand {
     private RiseClans plugin;
@@ -27,14 +28,14 @@ public class ClanInfoCommand implements IClanCommand {
             if (args.length == 0) {
                 Optional<Clan> playerClanOpt = repo.getClanByMember(player.getUniqueId());
                 if (!playerClanOpt.isPresent()) {
-                    MessageUtil.sendError(player, "Вы не состоите ни в каком клане");
+                    MessageUtil.sendFromConfig(player, "no-permission", null);
                     return;
                 }
                 clan = playerClanOpt.get();
             } else {
                 Optional<Clan> clanOpt = repo.getClanByName(args[0]);
                 if (!clanOpt.isPresent()) {
-                    MessageUtil.sendError(player, "Клан не найден");
+                    MessageUtil.sendFromConfig(player, "error-db", null);
                     return;
                 }
                 clan = clanOpt.get();
@@ -42,35 +43,31 @@ public class ClanInfoCommand implements IClanCommand {
 
             if (clan != null) {
                 List<ClanMember> members = repo.getClanMembers(clan.getId());
-                int maxMembers = plugin.getConfig().getInt("clan.max-members", 10);
+                int maxMembers = plugin.getConfig().getInt("clan.max-members", 50);
 
-                // Header with gradient/accent color (uses MessageUtil.translate and hex code A9BBF8)
-                MessageUtil.sendInfo(player, MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯ &3[ &#A9BBF8" + clan.getName() + " &3] &#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
+                MessageUtil.sendFromConfig(player, "info-header", Map.of("clan", clan.getName()));
+                MessageUtil.sendFromConfig(player, "info-level", Map.of("level", String.valueOf(clan.getLevel())));
+                MessageUtil.sendFromConfig(player, "info-kills", Map.of("kills", String.valueOf(clan.getKills())));
+                MessageUtil.sendFromConfig(player, "info-deaths", Map.of("deaths", String.valueOf(clan.getDeaths())));
 
-                MessageUtil.sendInfo(player, MessageUtil.translate("&#A9BBF8Уровень: &7" + clan.getLevel()));
-                MessageUtil.sendInfo(player, MessageUtil.translate("&#A9BBF8Убийств: &7" + clan.getKills()));
-                MessageUtil.sendInfo(player, MessageUtil.translate("&#A9BBF8Смертей: &7" + clan.getDeaths()));
+                MessageUtil.sendFromConfig(player, "info-members", Map.of(
+                    "count", String.valueOf(members.size()),
+                    "max", String.valueOf(maxMembers)
+                ));
 
-                // Members count as current/max
-                MessageUtil.sendInfo(player, MessageUtil.translate("&#A9BBF8Участники: &7" + members.size() + "/" + maxMembers));
-
-                // Players list (names). If empty show dash
                 StringBuilder names = new StringBuilder();
                 for (ClanMember m : members) {
                     names.append(m.getPlayerName()).append(", ");
                 }
                 String playerList = names.length() > 2 ? names.substring(0, names.length() - 2) : "—";
 
-                MessageUtil.sendInfo(player, MessageUtil.translate("&#A9BBF8Игроки: &7" + playerList));
-
-                MessageUtil.sendInfo(player, MessageUtil.translate("&#A9BBF8ПвП: &7" + (clan.isPvpEnabled() ? "Включен" : "Выключен")));
-
-                // Footer
-                MessageUtil.sendInfo(player, MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
+                MessageUtil.sendFromConfig(player, "info-players", Map.of("players", playerList));
+                MessageUtil.sendFromConfig(player, "info-pvp", Map.of("state", clan.isPvpEnabled() ? "Включен" : "Выключен"));
+                MessageUtil.sendFromConfig(player, "info-footer", null);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }

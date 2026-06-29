@@ -8,6 +8,7 @@ import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.utils.MessageUtil;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Map;
 
 public class ClanSetLeaderCommand implements IClanCommand {
     private RiseClans plugin;
@@ -19,7 +20,7 @@ public class ClanSetLeaderCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Использование: /clan setLeader {игрок}");
+            MessageUtil.sendFromConfig(player, "no-permission", null);
             return;
         }
         
@@ -28,7 +29,7 @@ public class ClanSetLeaderCommand implements IClanCommand {
             
             Optional<Clan> clanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendError(player, "Вы не являетесь лидером клана");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
@@ -36,18 +37,18 @@ public class ClanSetLeaderCommand implements IClanCommand {
             
             Player targetPlayer = Bukkit.getPlayer(args[0]);
             if (targetPlayer == null) {
-                MessageUtil.sendError(player, "Игрок не найден");
+                MessageUtil.sendFromConfig(player, "player-not-found", Map.of("player", args[0]));
                 return;
             }
             
             if (targetPlayer.getUniqueId().equals(player.getUniqueId())) {
-                MessageUtil.sendError(player, "Вы не можете сделать себя лидером");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
             Optional<Clan> targetClan = repo.getClanByMember(targetPlayer.getUniqueId());
             if (!targetClan.isPresent() || targetClan.get().getId() != clan.getId()) {
-                MessageUtil.sendError(player, "Этот игрок не состоит в вашем клане");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
@@ -59,12 +60,11 @@ public class ClanSetLeaderCommand implements IClanCommand {
             repo.updateMemberRole(clan.getId(), targetPlayer.getUniqueId(), "LEADER");
             repo.updateMemberRole(clan.getId(), oldLeaderUUID, "MEMBER");
             
-            MessageUtil.sendSuccess(player, "Роль лидера передана игроку " + targetPlayer.getName());
-            MessageUtil.sendSuccess(targetPlayer, "Вы стали лидером клана \"" + clan.getName() + "\"");
-            MessageUtil.sendInfo(player, "Вы теперь обычный участник клана");
+            MessageUtil.sendFromConfig(player, "setleader-success", Map.of("player", targetPlayer.getName()));
+            MessageUtil.sendFromConfig(targetPlayer, "setleader-target", Map.of("clan", clan.getName()));
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }

@@ -8,6 +8,7 @@ import ru.roisest.riseclan.model.ClanMember;
 import ru.roisest.riseclan.utils.MessageUtil;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 public class ClanChatCommand implements IClanCommand {
     private RiseClans plugin;
@@ -19,7 +20,7 @@ public class ClanChatCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Использование: /clan chat {сообщение}");
+            MessageUtil.sendFromConfig(player, "usage-chat", null);
             return;
         }
         
@@ -28,7 +29,7 @@ public class ClanChatCommand implements IClanCommand {
             
             Optional<Clan> clanOpt = repo.getClanByMember(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendError(player, "Вы не состоите ни в каком клане");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
@@ -40,19 +41,26 @@ public class ClanChatCommand implements IClanCommand {
             }
             
             String chatMessage = message.toString().trim();
-            String finalMessage = "&8[" + clan.getName() + "&8] &a" + player.getName() + ": &f" + chatMessage;
+            String configFormat = MessageUtil.getConfigString("chat-format");
             
-            List<ClanMember> members = repo.getClanMembers(clan.getId());
-            for (ClanMember member : members) {
-                Player onlinePlayer = org.bukkit.Bukkit.getPlayer(member.getPlayerUUID());
-                if (onlinePlayer != null && onlinePlayer.isOnline()) {
-                    MessageUtil.sendChat(onlinePlayer, finalMessage);
+            if (configFormat != null) {
+                String finalMessage = configFormat
+                    .replace("{clan}", clan.getName())
+                    .replace("{player}", player.getName())
+                    .replace("{message}", chatMessage);
+                
+                List<ClanMember> members = repo.getClanMembers(clan.getId());
+                for (ClanMember member : members) {
+                    Player onlinePlayer = org.bukkit.Bukkit.getPlayer(member.getPlayerUUID());
+                    if (onlinePlayer != null && onlinePlayer.isOnline()) {
+                        MessageUtil.sendChat(onlinePlayer, finalMessage);
+                    }
                 }
             }
             
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }
