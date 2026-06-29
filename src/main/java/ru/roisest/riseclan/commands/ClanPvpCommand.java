@@ -22,7 +22,7 @@ public class ClanPvpCommand implements IClanCommand {
             ClanRepository clanRepo = new ClanRepository(plugin.getDatabaseManager());
             Optional<Clan> clanOpt = clanRepo.getClanByMember(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendFromConfig(player, "no-clan", null);
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
 
@@ -38,7 +38,7 @@ public class ClanPvpCommand implements IClanCommand {
             clan.setPvpEnabled(newPvpState);
             clanRepo.updateClan(clan);
 
-            Map<String, String> ph = Map.of("state", newPvpState ? "включен" : "выключен");
+            Map<String, String> ph = Map.of("state", newPvpState ? "&#00FF00включен" : "&#FF5555выключен");
             MessageUtil.sendFromConfig(player, "pvp-toggled", ph);
 
         } catch (SQLException e) {
