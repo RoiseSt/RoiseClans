@@ -25,22 +25,86 @@ pvp:
 # Messages
 messages:
   prefix: '<gradient:#A9BBF8:#7EE0FF>[RiseClans]</gradient> &r'
+
+  # Generic
   no-permission: '&#FF5555У вас нет прав на эту команду'
-  usage-kick: '&#A9BBF8Использование: /clan kick {player}'
-  player-not-found: '&#FF5555Игрок {player} не найден'
-  clan-not-found: '&#FF5555Клан не найден'
-  no-clan: '&#FF5555Вы не состоите в клане'
+  error-db: '&#FF5555Ошибка базы данных, свяжитесь с администратором'
+  error-generic: '&#FF5555Произошла ошибка'
+
+  # Help
+  help-header: '<gradient:#7EE0FF:#A9BBF8>=== RoiseClans Команды ===</gradient>'
+  help-lines:
+    - '&#A9BBF8/clan help &8- &fПоказать список команд'
+    - '&#A9BBF8/clan create {name} &8- &fСоздать клан'
+    - '&#A9BBF8/clan delete &8- &fУдалить клан'
+    - '&#A9BBF8/clan info {клан} &8- &fИнформация о клане'
+    - '&#A9BBF8/clan invite {игрок} &8- &fПригласить игрока в клан'
+    - '&#A9BBF8/clan accept &8- &fПринять приглашение в клан'
+    - '&#A9BBF8/clan decline &8- &fОтклонить приглашение в клан'
+    - '&#A9BBF8/clan kick {игрок} &8- &fКикнуть игрока'
+    - '&#A9BBF8/clan leave &8- &fПокинуть клан'
+    - '&#A9BBF8/clan pvp &8- &fПереключить PvP внутри клана'
+    - '&#A9BBF8/clan chat {сообщение} &8- &fНаписать в клановый чат'
+    - '&#A9BBF8/clan setLeader {игрок} &8- &fПередать роль лидера'
+    - '&#A9BBF8/clan setZam {игрок} &8- &fНазначить заместителя'
+
+  # Create / Delete
+  usage-create: '&#A9BBF8Использование: /clan create {name}'
+  cannot-create-name: '&#FF5555Название клана недопустимо (длина от {min} до {max})'
   clan-exists: '&#FF5555Клан с таким именем уже существует'
   clan-created: '&#A9BBF8Клан {clan} успешно создан'
   clan-deleted: '&#A9BBF8Клан {clan} удален'
+
+  # Invite / Accept / Decline
+  usage-invite: '&#A9BBF8Использование: /clan invite {player}'
   invite-sent: '&#A9BBF8Приглашение отправлено игроку {player}'
   invited: '&#A9BBF8Вы получили приглашение в клан {clan}'
   invite-accept-button: '&#00FF00[✓ ПРИНЯТЬ]'
   invite-decline-button: '&#FF5555[✗ ОТКЛОНИТЬ]'
   invite-accept-hover: '&#00FF00Нажмите, чтобы присоединиться к клану'
   invite-decline-hover: '&#FF5555Нажмите, чтобы отклонить приглашение'
+  no-invitation: '&#FF5555У вас нет приглашений в клан'
+
+  # Accept / Joined / Left
   joined-clan: '&#00FF00Вы присоединились к клану {clan}'
   left-clan: '&#A9BBF8Вы покинули клан {clan}'
+
+  # Kick
+  usage-kick: '&#A9BBF8Использование: /clan kick {player}'
+  player-not-found: '&#FF5555Игрок {player} не найден'
+  kick-not-in-clan: '&#FF5555Этот игрок не состоит в вашем клане'
+  cannot-kick-self: '&#FF5555Вы не можете кикнуть себя'
+  cannot-kick-leader: '&#FF5555Вы не можете кикнуть лидера клана'
   kick-success: '&#A9BBF8Игрок {player} был исключён из клана {clan}'
   kicked: '&#FF5555Вы были исключены из клана {clan}'
-  error-db: '&#FF5555Ошибка базы данных, свяжитесь с администратором'
+
+  # PvP
+  pvp-disabled: '&#FF5555PvP между членами клана отключено'
+  pvp-no-permission: '&#FF5555Только лидер или заместитель лидера могут переключать ПВП!'
+  pvp-toggled: '&#A9BBF8ПВП между членами клана было {state}!'
+
+  # Info
+  info-header: '&#A9BBF8⎯⎯⎯ &3[ &#A9BBF8{clan} &3] &#A9BBF8⎯⎯⎯'
+  info-level: '&#A9BBF8Уровень: &7{level}'
+  info-kills: '&#A9BBF8Убийств: &7{kills}'
+  info-deaths: '&#A9BBF8Смертей: &7{deaths}'
+  info-members: '&#A9BBF8Участники: &7{count}/{max}'
+  info-players: '&#A9BBF8Игроки: &7{players}'
+  info-pvp: '&#A9BBF8ПвП: &7{state}'
+  info-footer: '&#A9BBF8⎯⎯⎯'
+
+  # Chat
+  usage-chat: '&#A9BBF8Использование: /clan chat {сообщение}'
+  chat-format: '&8[{clan}&8] &a{player}: &f{message}'
+
+  # SetLeader / SetZam
+  setleader-success: '&#A9BBF8Роль лидера передана игроку {player}'
+  setleader-target: '&#A9BBF8Вы стали лидером клана {clan}'
+  setzam-success: '&#A9BBF8Игрок {player} теперь заместитель лидера'
+  setzam-target: '&#A9BBF8Вы стали заместителем лидера клана {clan}'
+
+  # Limits / validation
+  clan-full: '&#FF5555В клане достигнут лимит участников ({max})'
+  cannot-invite-self: '&#FF5555Вы не можете пригласить себя'
+  already-in-clan: '&#FF5555Этот игрок уже состоит в клане'
+  player-not-found-general: '&#FF5555Игрок не найден'
