@@ -68,7 +68,7 @@ messages:
   invite-accept-hover: '&#00FF00Нажмите, чтобы присоединиться к клану'
   invite-decline-hover: '&#FF5555Нажмите, чтобы отклонить приглашение'
   invite-separator: '&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯'
-  no-invitation: '&#FF5555У вас нет приглашений в клан'
+  no-invitation: '&#FF5555У ��ас нет приглашений в клан'
 
   # Accept / Joined / Left
   joined-clan: '&#00FF00Вы присоединились к клану {clan}'

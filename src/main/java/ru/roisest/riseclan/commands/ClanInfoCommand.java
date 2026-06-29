@@ -28,7 +28,7 @@ public class ClanInfoCommand implements IClanCommand {
             if (args.length == 0) {
                 Optional<Clan> playerClanOpt = repo.getClanByMember(player.getUniqueId());
                 if (!playerClanOpt.isPresent()) {
-                    MessageUtil.sendFromConfig(player, "no-permission", null);
+                    MessageUtil.sendFromConfig(player, "not-in-clan", null);
                     return;
                 }
                 clan = playerClanOpt.get();

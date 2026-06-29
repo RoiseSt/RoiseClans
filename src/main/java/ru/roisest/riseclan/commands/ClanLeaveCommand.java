@@ -22,7 +22,7 @@ public class ClanLeaveCommand implements IClanCommand {
             
             Optional<Clan> clanOpt = repo.getClanByMember(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendFromConfig(player, "no-permission", null);
+                MessageUtil.sendFromConfig(player, "not-in-clan", null);
                 return;
             }
             
