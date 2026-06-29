@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import ru.roisest.riseclan.RiseClans;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,6 +46,16 @@ public class MessageUtil {
             }
         }
         player.sendMessage(translate(raw));
+    }
+    
+    public static String getConfigString(String key) {
+        if (RiseClans.getInstance() == null) return null;
+        return RiseClans.getInstance().getConfig().getString("messages." + key);
+    }
+
+    public static List<String> getConfigStringList(String key) {
+        if (RiseClans.getInstance() == null) return java.util.Collections.emptyList();
+        return RiseClans.getInstance().getConfig().getStringList("messages." + key);
     }
     
     public static String translate(String message) {
