@@ -60,7 +60,6 @@ public class PlayerListener implements Listener {
                     if (!vClan.isPvpEnabled()) {
                         // PvP disabled among clan members
                         event.setCancelled(true);
-                        MessageUtil.sendFromConfig(attacker, "pvp-disabled", null);
                     }
                 }
             }
