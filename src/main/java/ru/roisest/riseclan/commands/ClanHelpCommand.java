@@ -15,11 +15,9 @@ public class ClanHelpCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         player.sendMessage("");
-
-        player.sendMessage(MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ &3[&#A9BBF8 RoiseClans &3] &#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
-
+        player.sendMessage(MessageUtil.translate(plugin.getConfig().getString("messages.prefix", "") + "&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ [RoiseClans] ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
         player.sendMessage("");
-
+        
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan help &8- &fПоказывает список команд"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan create {имя} &8- &fСоздать клан"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan delete &8- &fУдалить клан"));
@@ -32,11 +30,9 @@ public class ClanHelpCommand implements IClanCommand {
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan pvp &8- &fИзменить режим PvP в клане"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan chat {сообщение} &8- &fНаписать в клановый чат"));
         player.sendMessage(MessageUtil.translate("&#A9BBF8/clan setLeader {игрок} &8- &fПередать роль лидера"));
-
+        
         player.sendMessage("");
-
         player.sendMessage(MessageUtil.translate("&#A9BBF8⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯"));
-
         player.sendMessage("");
     }
 }
