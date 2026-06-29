@@ -7,6 +7,7 @@ import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.model.ClanMember;
 import ru.roisest.riseclan.utils.MessageUtil;
 import java.util.Optional;
+import java.util.Map;
 
 public class ClanCreateCommand implements IClanCommand {
     private RiseClans plugin;
@@ -18,7 +19,7 @@ public class ClanCreateCommand implements IClanCommand {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length < 1) {
-            MessageUtil.sendError(player, "Использование: /clan create {имя}");
+            MessageUtil.sendFromConfig(player, "usage-create", null);
             return;
         }
 
@@ -28,12 +29,13 @@ public class ClanCreateCommand implements IClanCommand {
 
         // Проверка на наличие только цифр
         if (!clanName.matches("\\d+")) {
-            MessageUtil.sendError(player, "Название клана может содержать только цифры");
+            MessageUtil.sendFromConfig(player, "error-generic", null);
             return;
         }
 
         if (clanName.length() < minLength || clanName.length() > maxLength) {
-            MessageUtil.sendError(player, "Название клана должно быть от " + minLength + " до " + maxLength + " символов");
+            Map<String, String> ph = Map.of("min", String.valueOf(minLength), "max", String.valueOf(maxLength));
+            MessageUtil.sendFromConfig(player, "cannot-create-name", ph);
             return;
         }
 
@@ -42,18 +44,20 @@ public class ClanCreateCommand implements IClanCommand {
             
             Optional<Clan> playerClan = repo.getClanByLeader(player.getUniqueId());
             if (playerClan.isPresent()) {
-                MessageUtil.sendError(player, "Вы уже являетесь лидером клана " + playerClan.get().getName());
+                Map<String, String> ph = Map.of("clan", playerClan.get().getName());
+                MessageUtil.sendFromConfig(player, "error-generic", ph);
                 return;
             }
             
             Optional<Clan> memberClan = repo.getClanByMember(player.getUniqueId());
             if (memberClan.isPresent()) {
-                MessageUtil.sendError(player, "Вы уже состоите в клане " + memberClan.get().getName() + ". Сначала покиньте клан.");
+                Map<String, String> ph = Map.of("clan", memberClan.get().getName());
+                MessageUtil.sendFromConfig(player, "error-generic", ph);
                 return;
             }
             
             if (repo.getClanByName(clanName).isPresent()) {
-                MessageUtil.sendError(player, "Клан с таким названием уже существует");
+                MessageUtil.sendFromConfig(player, "clan-exists", null);
                 return;
             }
 
@@ -73,11 +77,12 @@ public class ClanCreateCommand implements IClanCommand {
                 leader.setRole("LEADER");
                 
                 repo.addMember(createdClan.get().getId(), leader);
-                MessageUtil.sendSuccess(player, "Клан \"" + clanName + "\" успешно создан!");
+                Map<String, String> ph = Map.of("clan", clanName);
+                MessageUtil.sendFromConfig(player, "clan-created", ph);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка при создании клана");
+            MessageUtil.sendFromConfig(player, "error-generic", null);
         }
     }
 }
