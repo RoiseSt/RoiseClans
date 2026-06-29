@@ -6,6 +6,7 @@ import ru.roisest.riseclan.database.ClanRepository;
 import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.utils.MessageUtil;
 import java.util.Optional;
+import java.util.Map;
 
 public class ClanLeaveCommand implements IClanCommand {
     private RiseClans plugin;
@@ -21,22 +22,22 @@ public class ClanLeaveCommand implements IClanCommand {
             
             Optional<Clan> clanOpt = repo.getClanByMember(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendError(player, "Вы не состоите ни в каком клане");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
             Clan clan = clanOpt.get();
             
             if (clan.getLeaderUUID().equals(player.getUniqueId())) {
-                MessageUtil.sendError(player, "Лидер клана не может покинуть клан. Передайте роль лидера другому участнику или удалите клан");
+                MessageUtil.sendFromConfig(player, "no-permission", null);
                 return;
             }
             
             repo.removeMember(clan.getId(), player.getUniqueId());
-            MessageUtil.sendSuccess(player, "Вы покинули клан");
+            MessageUtil.sendFromConfig(player, "left-clan", Map.of("clan", clan.getName()));
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }
