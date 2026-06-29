@@ -32,7 +32,7 @@ public class ClanKickCommand implements IClanCommand {
 
             Optional<Clan> clanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendFromConfig(player, "no-permission", null);
+                MessageUtil.sendFromConfig(player, "only-leader-can-kick", null);
                 return;
             }
 

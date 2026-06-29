@@ -22,7 +22,7 @@ public class ClanDeleteCommand implements IClanCommand {
             
             Optional<Clan> clanOpt = repo.getClanByLeader(player.getUniqueId());
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendFromConfig(player, "no-permission", null);
+                MessageUtil.sendFromConfig(player, "clan-not-leader", null);
                 return;
             }
             

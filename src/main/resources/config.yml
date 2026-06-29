@@ -28,6 +28,7 @@ messages:
 
   # Generic
   no-permission: '&#FF5555У вас нет прав на эту команду'
+  not-in-clan: '&#FF5555Вы не состоите в клане'
   error-db: '&#FF5555Ошибка базы данных, свяжитесь с администратором'
   error-generic: '&#FF5555Произошла ошибка'
 
@@ -53,6 +54,8 @@ messages:
   cannot-create-name: '&#FF5555Название клана недопустимо (длина от {min} до {max})'
   clan-exists: '&#FF5555Клан с таким именем уже существует'
   clan-created: '&#A9BBF8Клан {clan} успешно создан'
+  usage-delete: '&#A9BBF8Использование: /clan delete'
+  clan-not-leader: '&#FF5555Только лидер может удалить клан'
   clan-deleted: '&#A9BBF8Клан {clan} удален'
 
   # Invite / Accept / Decline
@@ -74,6 +77,7 @@ messages:
 
   # Kick
   usage-kick: '&#A9BBF8Использование: /clan kick {player}'
+  only-leader-can-kick: '&#FF5555Только лидер может кикать игроков'
   player-not-found: '&#FF5555Игрок {player} не найден'
   kick-not-in-clan: '&#FF5555Этот игрок не состоит в вашем клане'
   cannot-kick-self: '&#FF5555Вы не можете кикнуть себя'
@@ -82,11 +86,13 @@ messages:
   kicked: '&#FF5555Вы были исключены из клана {clan}'
 
   # PvP
+  usage-pvp: '&#A9BBF8Использование: /clan pvp'
   pvp-disabled: '&#FF5555PvP между членами клана отключено'
-  pvp-no-permission: '&#FF5555Только лидер или заместитель лидера могут переключать ПВП!'
+  pvp-no-permission: '&#FF5555Только лидер или ��аместитель лидера могут переключать ПВП!'
   pvp-toggled: '&#A9BBF8ПВП между членами клана было {state}!'
 
   # Info
+  usage-info: '&#A9BBF8Использование: /clan info [название_клана]'
   info-header: '&#A9BBF8⎯⎯⎯ &3[ &#A9BBF8{clan} &3] &#A9BBF8⎯⎯⎯'
   info-level: '&#A9BBF8Уровень: &7{level}'
   info-kills: '&#A9BBF8Убийств: &7{kills}'
@@ -102,6 +108,7 @@ messages:
 
   # SetLeader / SetZam
   usage-setleader: '&#A9BBF8Использование: /clan setleader {player}'
+  only-leader-can-promote: '&#FF5555Только лидер может назначить нового лидера'
   setleader-success: '&#A9BBF8Роль лидера передана игроку {player}'
   setleader-target: '&#A9BBF8Вы стали лидером клана {clan}'
   setzam-success: '&#A9BBF8Игрок {player} теперь заместитель лидера'
