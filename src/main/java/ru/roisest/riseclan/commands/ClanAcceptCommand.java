@@ -7,6 +7,7 @@ import ru.roisest.riseclan.model.Clan;
 import ru.roisest.riseclan.model.ClanMember;
 import ru.roisest.riseclan.utils.MessageUtil;
 import java.util.Optional;
+import java.util.Map;
 
 public class ClanAcceptCommand implements IClanCommand {
     private RiseClans plugin;
@@ -22,14 +23,14 @@ public class ClanAcceptCommand implements IClanCommand {
             
             Optional<Integer> invitationOpt = repo.getLatestInvitation(player.getUniqueId());
             if (!invitationOpt.isPresent()) {
-                MessageUtil.sendError(player, "У вас нет приглашений в клан");
+                MessageUtil.sendFromConfig(player, "no-invitation", null);
                 return;
             }
             
             int clanId = invitationOpt.get();
             Optional<Clan> clanOpt = repo.getClanById(clanId);
             if (!clanOpt.isPresent()) {
-                MessageUtil.sendError(player, "Клан не найден");
+                MessageUtil.sendFromConfig(player, "error-db", null);
                 return;
             }
             
@@ -37,7 +38,13 @@ public class ClanAcceptCommand implements IClanCommand {
             
             Optional<Clan> playerClan = repo.getClanByMember(player.getUniqueId());
             if (playerClan.isPresent()) {
-                MessageUtil.sendError(player, "Вы уже состоите в клане " + playerClan.get().getName());
+                MessageUtil.sendFromConfig(player, "already-in-clan", null);
+                return;
+            }
+            
+            int maxMembers = plugin.getConfig().getInt("clan.max-members", 50);
+            if (repo.getClanMembers(clan.getId()).size() >= maxMembers) {
+                MessageUtil.sendFromConfig(player, "clan-full", Map.of("max", String.valueOf(maxMembers)));
                 return;
             }
             
@@ -49,10 +56,10 @@ public class ClanAcceptCommand implements IClanCommand {
             repo.addMember(clan.getId(), member);
             repo.deleteInvitation(player.getUniqueId());
             
-            MessageUtil.sendSuccess(player, "Вы присоединились к клану \"" + clan.getName() + "\"");
+            MessageUtil.sendFromConfig(player, "joined-clan", Map.of("clan", clan.getName()));
         } catch (Exception e) {
             e.printStackTrace();
-            MessageUtil.sendError(player, "Произошла ошибка");
+            MessageUtil.sendFromConfig(player, "error-db", null);
         }
     }
 }
