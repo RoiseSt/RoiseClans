@@ -38,14 +38,18 @@ public class MessageUtil {
             player.sendMessage(translate(key));
             return;
         }
+        
+        String prefix = RiseClans.getInstance().getConfig().getString("messages.prefix", "");
         String raw = RiseClans.getInstance().getConfig().getString("messages." + key);
         if (raw == null) return;
+        
         if (placeholders != null) {
             for (Map.Entry<String, String> e : placeholders.entrySet()) {
                 raw = raw.replace("{" + e.getKey() + "}", e.getValue() == null ? "" : e.getValue());
             }
         }
-        player.sendMessage(translate(raw));
+        
+        player.sendMessage(translate(prefix + raw));
     }
     
     public static String getConfigString(String key) {
